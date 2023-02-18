@@ -1,0 +1,6 @@
+name: softwareEngineeringProject
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+prefix: /Users/iphone/opt/anaconda3/envs/softwareEngineeringProject
