@@ -3,3 +3,4 @@ link = 'https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey=5ac1b590
 getStaticData = requests.get(link)
 staticDataFile = getStaticData.json()
 staticDataFile
+print("£")
