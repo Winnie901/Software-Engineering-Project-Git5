@@ -11,7 +11,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://SEGROUP25:SEGROUP25?@dbbikes.cv
 
 db = SQLAlchemy(app)
 
-
 # You want a class that can represent this so its easier to deal with the data when trying to use it
 class BikesData(db.Model):
     #    {
