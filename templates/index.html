@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <h1>Bike Locations</h1>
+    <button><a style="text-decoration:none" href="./weather">Go to weather page</a></button>
+    <table>
+    <!-- Here we are looping through the list of jsons passed in from the py code -->
+      {% for bike in bikes %}
+        <tr>
+          <td>
+            <!-- Referencing bike.name because we know its a value in the json -->
+            {{bike['position']}}
+          </td>
+        </tr>
+        <!-- End for loop -->
+        {% endfor %}
+    </table>
+  </body>
+</html>
