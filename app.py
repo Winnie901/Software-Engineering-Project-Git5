@@ -144,3 +144,22 @@ def weather_view():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
+
+
+
+# Here we are getting information from the DB in order to plot markers of
+# the stations on our map
+
+@app.route("/stations")
+@functools.lru_cache(maxsize=128)
+def get_stations():
+    engine = get_db()
+    sql = "select * from station ;"
+    try:
+        with engine.connect() as conn:
+        rows = conn.execute(text(sql)).fetchall()
+        print('#found {} stations', len(rows), rows)
+        return jsonify([row._asdict() for row in rows])
+    except:
+        print(traceback.format_exc())
+        return "error in get_stations", 404

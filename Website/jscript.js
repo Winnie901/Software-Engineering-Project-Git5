@@ -31,6 +31,8 @@ function initMap() {
         title: "Clonmel Street",
         map: map,
     });
+
+    
 }
 // Call initMap function when Google Maps API is loaded
 google.maps.event.addDomListener(window, "load", initMap);
