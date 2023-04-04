@@ -12,25 +12,27 @@
 
         var locations = {{ locations|tojson }};
         for (var i = 0; i < locations.length; i++) {
-            var location = locations[i];
-            var infoWindow = new google.maps.InfoWindow();
-            var marker = new google.maps.Marker({
-                position: { lat: location[0], lng: location[1] },
-                map: map,
-            });
+          var location = locations[i];
+          var infoWindow = new google.maps.InfoWindow();
 
-            google.maps.event.addListener(marker, "click", (function(marker, location) {
-            return function() {
-            infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
-            infoWindow.open(map, marker);
-        }
-    })(marker, location));
+          var marker = new google.maps.Marker({
+            position: {lat: location[0], lng: location[1]},
+            map: map,
+          });
+
+          google.maps.event.addListener(marker, "click", (function (marker, location) {
+            return function () {
+              infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
+              infoWindow.open(map, marker);
+            }
+          })(marker, location));
         }
       }
+
     </script>
   </head>
   <body onload="initMap()">
-    <div id="map" style="height: 500px;"></div>
+    <div id="map" style="height: 100%;"></div>
   </body>
 </html>
 

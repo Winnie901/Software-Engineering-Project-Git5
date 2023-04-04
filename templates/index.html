@@ -2,9 +2,76 @@
 <html lang="en">
 <head>
 <title> Eunice Personal Portfolio Home Page</title>
-<link rel="stylesheet" type="text/css" href="stylesheet1.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet1.css') }}">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>
+<script>
+     function createCenterControl(map) {
+  const controlButton = document.createElement('button');
+
+  // Set CSS for the control.
+  controlButton.style.backgroundColor = '#fff';
+  controlButton.style.border = '2px solid #fff';
+  controlButton.style.borderRadius = '3px';
+  controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlButton.style.color = 'rgb(25,25,25)';
+  controlButton.style.cursor = 'pointer';
+  controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
+  controlButton.style.fontSize = '16px';
+  controlButton.style.lineHeight = '38px';
+  controlButton.style.margin = '8px 0 22px';
+  controlButton.style.padding = '0 5px';
+  controlButton.style.textAlign = 'center';
+
+  controlButton.textContent = 'Maps and Stations';
+  controlButton.title = 'Click to recenter the map';
+  controlButton.type = 'button';
+
+  // Setup the click event listeners: simply set the map to Chicago.
+  controlButton.addEventListener('click', () => {
+{
+        location.href = "/mapping";
+    };
+  });
+
+  return controlButton;
+}
+      function initMap() {
+        var dublin = {lat: 53.3498, lng: -6.2603};
+        var map = new google.maps.Map(
+            document.getElementById('map'), {zoom: 12, center: dublin
+        });
+
+        var locations = {{ locations|tojson }};
+        for (var i = 0; i < locations.length; i++) {
+            var location = locations[i];
+            var infoWindow = new google.maps.InfoWindow();
+
+            var marker = new google.maps.Marker({
+                position: { lat: location[0], lng: location[1] },
+                map: map,
+            });
+
+            google.maps.event.addListener(marker, "click", (function(marker, location) {
+            return function() {
+            infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
+            infoWindow.open(map, marker);
+        }
+    })(marker, location));
+        }
+          // Create the DIV to hold the control.
+  const centerControlDiv = document.createElement("div");
+  // Create the control.
+  const centerControl = createCenterControl(map);
+
+  // Append the control to the DIV.
+  centerControlDiv.appendChild(centerControl);
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+      }
+
+    </script>
 </head>
-    <body>
+    <body onload="initMap()">
     <header>
 
 <nav>
@@ -25,7 +92,7 @@
 <main>
 
     <section class="main">
-       <div><img src="DBlogo.png"></div>
+       <div><img src="{{ url_for('static',filename='images/DBlogo.png') }}"></div>
      <div><h1 class="h1"> Welcome to Dublin Bikes</h1>
 
         <p class="p1"> Your hub for sustainable travel all around Dublin.</p></h1></div>
@@ -39,7 +106,8 @@
 
 <section>
 <h2 class="h2">Subscription Options</h2>
-
+<p style="text-align: center">Choose a membership level that works for you, whether you are a frequent rider or an occasional user.
+</p>
 <div class="row">
   <div class="column" >
     <h2>1 Day Pass</h2>
@@ -80,7 +148,8 @@ It's important to note that the e-dublinbikes option is independent of your annu
 
 
     <section>
-<h2 class="h2">Mapping - Map goes here</h2>
+<h2 class="h2">Mapping</h2>
+    <div id="map" style="height: 500px;"></div>
 
     </section>
 
@@ -93,7 +162,7 @@ It's important to note that the e-dublinbikes option is independent of your annu
 
             <div class="gallery">
   <a target="_blank" href="https://irishcycle.com/2023/04/01/radical-shake-up-expected-as-minister-ryan-ties-walking-and-cycling-priority-to-all-transport-funding/">
-    <img src="cycling1.jpeg" alt="Cinque Terre" width="600" height="700">
+    <img src="{{ url_for('static',filename='images/cycling1.jpeg') }}" alt="Cinque Terre" width="600" height="700">
   </a>
                 <div class="desc"> <b><u>Transport for Ireland</u></b>
   <p>Transport Minister Eamon Ryan has announced a bold move to prioritize the design of infrastructure for walking and cycling. In order to achieve this goal, a high standard of active travel infrastructure will be made a requirement of all transport funding. The design manuals and guidance that the Minister has referred to have been in place for over a decade but largely ignored or selectively used to defend rubbish designs.
@@ -104,7 +173,7 @@ It's important to note that the e-dublinbikes option is independent of your annu
 
 <div class="gallery">
   <a target="_blank" href="https://irishcycle.com/2023/03/31/600m-section-of-clontarf-route-cycle-path-opens-in-one-direction/">
-    <img src="cycling2.jpeg" alt="Forest" width="600" height="400">
+    <img src="{{ url_for('static',filename='images/cycling2.jpeg') }}" alt="Forest" width="600" height="400">
   </a>
  <div class="desc"> <b><u>Clontarf Cycle Route Path</u></b>
   <p>Today marks the opening of a new segment of the Clontarf to City Centre cycle path, which spans approximately 600 meters. This new section connects the junction with the Malahide road to just before the River Tolka at the Annesley Bridge.
@@ -115,7 +184,7 @@ Although this new segment is open to cyclists, they will still need to navigate 
 
 <div class="gallery">
   <a target="_blank" href="https://irishcycle.com/2023/03/30/talks-this-evening-on-learning-and-sharing-active-transport-knowledge-and-expertise/">
-    <img src="cycling3.jpeg" alt="Northern Lights" width="600" height="400">
+    <img src="{{ url_for('static',filename='images/cycling3.jpeg') }}" alt="Northern Lights" width="600" height="400">
   </a>
  <div class="desc"> <b><u> Dublin Cycling Campaign</u></b>
   <p> The upcoming event on Thursday the 30th of March will feature notable speakers in the field of sustainable mobility and cycling. Robin van der Griend, a Sustainable Mobility Consultant from Mobycon Academy, and David O'Connor, the Head of Environment and Planning at TU Dublin, will both be presenting. Additionally, I, Cian Ginty, will be sharing insights on Dutch Cycling Study Tours.
@@ -127,7 +196,7 @@ The Q&A session will also include the expertise of Angela van der Kloof, a seaso
 
 <div class="gallery">
   <a target="_blank" href="https://irishcycle.com/2023/03/28/new-cycling-and-walking-link-opens-to-help-connect-areas-along-m50-at-sandyford/">
-    <img src="cycling4.jpeg" alt="Mountains" width="600" height="400">
+    <img src="{{ url_for('static',filename='images/cycling4.jpeg') }}" alt="Mountains" width="600" height="400">
   </a>
  <div class="desc"> <b><u> Sandyford Businesss District </u></b>
      <p>A brand new walking and cycling link has just been opened by Dún Laoghaire-Rathdown County Council and Transport Infrastructure Ireland (TII). This link spans a total length of 114 meters and will connect the Drummartin Link Road to Bracken Road, bypassing the often-congested Blackthorn Drive junction near the Beacon Hospital.

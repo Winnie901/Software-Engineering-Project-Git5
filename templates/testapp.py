@@ -28,22 +28,17 @@ def index():
     cursor = conn.cursor()
 
     # execute a query
-    cursor.execute('SELECT * FROM stations')
+    cursor.execute('SELECT time FROM weather')
 
     # fetch the data
-    stations_data = cursor.fetchall()
+    data = cursor.fetchall()
 
     # close the cursor and connection
     cursor.close()
     conn.close()
-    print(str(stations_data))
-    location = []
-    for row in stations_data:
-        location.append((row['position_lat'],row['position_long']))
-
-    print(location)
+    print(str(data))
     # return the data to the user
-    return render_template('index.html', locations=location)
+    return str(data)
 
 
 
@@ -55,19 +50,17 @@ def map():
     cursor.execute('SELECT * FROM stations')
 
     # fetch the data
-    stations_data = cursor.fetchall()
+    data = cursor.fetchall()
 
     # close the cursor and connection
     cursor.close()
     conn.close()
-    print(str(stations_data))
-    location = []
-    for row in stations_data:
-        location.append((row['position_lat'],row['position_long']))
+    print(str(data))
 
-    print(location)
     # return the data to the user
-    return render_template('mapping.html', locations=location)
+    return render_template('mapping.html', stations=data)
+
+
 
 
 # @app.route('/')
