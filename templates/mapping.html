@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet1.css') }}">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>
     <script>
         function initMap() {
@@ -32,9 +33,25 @@
     }
     </script>
 </head>
+    <header>
+
+<nav>
+
+<div class="topnav">
+      <a href="/">Homepage</a>
+    <a class="active" href="mapping.html"> Map</a>
+    <a href="how-to.html"> How To</a>
+    <a href="news.html"> News</a>
+
+</div>
+
+
+</nav>
+
+    </header>
 <body onload="initMap()">
 
-    <div id="map" style="height: 95vh;"></div>
+    <div id="map" style="height: 65vh;"></div>
 
 </body>
 </html>

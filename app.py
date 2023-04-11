@@ -22,20 +22,18 @@ conn = pymysql.connect(
 
 )
 
-
 @app.route('/')
 def index():
-    cursor = conn.cursor()
+    conn.ping()  # reconnecting mysql
+    with conn.cursor() as cursor:
+        # execute a query
+        cursor.execute('SELECT * FROM stations')
 
-    # execute a query
-    cursor.execute('SELECT * FROM stations')
+        # fetch the data
+        stations_data = cursor.fetchall()
 
-    # fetch the data
-    stations_data = cursor.fetchall()
-
-    # close the cursor and connection
-    cursor.close()
-    conn.close()
+        # close the cursor and connection
+        cursor.close()
     print(str(stations_data))
     location = []
     for row in stations_data:
@@ -47,19 +45,19 @@ def index():
 
 
 
-@app.route('/mapping')
+@app.route('/mapping.html')
 def map():
-    cursor = conn.cursor()
 
-    # execute a query
-    cursor.execute('SELECT * FROM stations')
+    conn.ping()  # reconnecting mysql
+    with conn.cursor() as cursor:
+        # execute a query
+        cursor.execute('SELECT position_lat,position_long FROM stations')
 
-    # fetch the data
-    stations_data = cursor.fetchall()
+        # fetch the data
+        stations_data = cursor.fetchall()
 
-    # close the cursor and connection
-    cursor.close()
-    conn.close()
+        # close the cursor and connection
+        cursor.close()
     print(str(stations_data))
     location = []
     for row in stations_data:
@@ -70,7 +68,9 @@ def map():
     return render_template('mapping.html', locations=location)
 
 
-# @app.route('/')
+@app.route('/news.html')
+def news():
+    return render_template('news.html')
 
 if __name__ == "__main__":
     app.run()
