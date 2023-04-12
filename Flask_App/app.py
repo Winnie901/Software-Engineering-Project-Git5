@@ -3,19 +3,18 @@ import mysql.connector
 
 # Creating the Flask app
 
-app = Flask(__name__, template_folder='C:\\Users\\james\\OneDrive\\Documents\\Computer Science Masters\\Software Engineering\\Github_Repository\\Software-Engineering-Project')
+app = Flask(__name__, template_folder='templates')
 
-app.config.from_pyfile('config.py')
 
 # The following function will be used to setup the connection
 
 def db_connection():
     connect = mysql.connector.connect(
-        host=app.config['DB_HOST'],
-        port=app.config['DB_PORT'],
-        database=app.config['DB_NAME'],
-        user=app.config['DB_USER'],
-        password=app.config['DB_PASS']
+        host='dbbikes.cvvkn6jkfbdf.eu-west-1.rds.amazonaws.com', # This is what was in the github repo
+        port=3306,
+        database='dbbikes',
+        user='SEGroup25',
+        password='SEGroup25?'
     )
     return connect
 
