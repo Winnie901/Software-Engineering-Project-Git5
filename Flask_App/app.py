@@ -29,6 +29,15 @@ def index():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM availability ORDER BY last_update DESC LIMIT 115')
 
+    # I'm going to try and get the correct availability results
+
+
+
+
+
+
+
+
     # Fetch the results and close the connection
     availability_results = cursor.fetchall()
     
@@ -42,17 +51,18 @@ def index():
     for location in location_results:
         latitude = location[4]
         longitude = location[5]
-        name = location[2]
+        name = location[3]
         
         bikes_available = None
         for availability in availability_results:
-            if availability[0] == location[6]:
+            if availability[3] == location[0]:
                 bikes_available = availability[1]
+                bike_stands_available = availability[0]
                 break
         
 
         
-        locations.append((latitude, longitude, bikes_available, name))
+        locations.append((latitude, longitude, bikes_available, name, bike_stands_available))
 
     return render_template('map.html', API_KEY='AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw', locations=locations)
 

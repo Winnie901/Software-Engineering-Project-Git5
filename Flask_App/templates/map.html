@@ -130,7 +130,7 @@
 
             google.maps.event.addListener(marker, "click", (function(marker, location) {
               return function() {
-              infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
+              infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2] + "<br>Available bike stands: " + location[4]);
               infoWindow.open(map, marker);
               }
             })(marker, location));
