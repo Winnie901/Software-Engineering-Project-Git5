@@ -1,47 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet1.css') }}">
+<html>
+  <head>
+    <title>Map with Markers</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet1.css') }}">
+
     <script>
-        function initMap() {
+      function initMap() {
         var dublin = {lat: 53.3498, lng: -6.2603};
         var map = new google.maps.Map(
-            document.getElementById('map'), {
-                zoom: 12, center: dublin
-            });
+            document.getElementById('map'), {zoom: 12, center: dublin
+        });
 
-        var locations = {{locations | tojson}};
+        var locations = {{ locations|tojson }};
         for (var i = 0; i < locations.length; i++) {
             var location = locations[i];
             var infoWindow = new google.maps.InfoWindow();
-
             var marker = new google.maps.Marker({
-                position: {lat: location[0], lng: location[1]},
+                position: { lat: location[0], lng: location[1] },
                 map: map,
             });
 
-            google.maps.event.addListener(marker, "click", (function (marker, location) {
-                return function () {
-                    infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
-                    infoWindow.open(map, marker);
-                }
-            })(marker, location));
+            google.maps.event.addListener(marker, "click", (function(marker, location) {
+            return function() {
+            infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
+            infoWindow.open(map, marker);
         }
-    }
+    })(marker, location));
+        }
+      }
     </script>
-</head>
+  </head>
     <header>
 
 <nav>
 
 <div class="topnav">
       <a href="/">Homepage</a>
-    <a class="active" href="mapping.html"> Map</a>
+    <a class="active" href="mapping.html">Map</a>
     <a href="how-to.html"> How To</a>
-    <a href="news.html"> News</a>
+        <a href="news.html"> News</a>
 
 </div>
 
@@ -49,9 +47,12 @@
 </nav>
 
     </header>
-<body onload="initMap()">
-
-    <div id="map" style="height: 65vh;"></div>
-
-</body>
+  <body onload="initMap()">
+    <div id="map" style="height: 500px;"></div>
+  </body>
 </html>
+
+
+
+
+

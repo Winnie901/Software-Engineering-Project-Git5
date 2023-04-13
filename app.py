@@ -72,5 +72,11 @@ def map():
 def news():
     return render_template('news.html')
 
+
+
+@app.route('/how-to.html')
+def howto():
+    return render_template('how-to.html')
+
 if __name__ == "__main__":
     app.run()
