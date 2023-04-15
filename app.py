@@ -1,6 +1,15 @@
 from flask import Flask
 from flask import Flask, render_template, request, redirect, url_for, session
 import pymysql.cursors
+import json
+import pickle
+import jsonify
+import sklearn
+from flask_sqlalchemy import model
+
+bike_model = pickle.load(open('bikes_model.pkl','rb'))
+stands_model = pickle.load(open('stands_model.pkl','rb'))
+
 
 app = Flask(__name__)
 
@@ -47,25 +56,38 @@ def index():
 
 @app.route('/mapping.html')
 def map():
+    # Execute a SELECT query that will join available bikes and location
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM availability ORDER BY last_update DESC LIMIT 117')
 
-    conn.ping()  # reconnecting mysql
-    with conn.cursor() as cursor:
-        # execute a query
-        cursor.execute('SELECT position_lat,position_long FROM stations')
+    # I'm going to try and get the correct availability results
 
-        # fetch the data
-        stations_data = cursor.fetchall()
+    # Fetch the results and close the connection
+    availability_results = cursor.fetchall()
 
-        # close the cursor and connection
-        cursor.close()
-    print(str(stations_data))
-    location = []
-    for row in stations_data:
-        location.append((row['position_lat'],row['position_long']))
+    # Getting the locations
+    cursor.execute('SELECT * FROM stations')
+    location_results = cursor.fetchall()
+    print(availability_results)
+    print(location_results)
+    # Now we will be extracting all the lat and long values
+    locations = []
+    for location in location_results:
+        latitude = location['position_lat']
+        longitude = location['position_long']
+        name = location['stat_name']
+        number = location['number']
 
-    print(location)
-    # return the data to the user
-    return render_template('mapping.html', locations=location)
+        bikes_available = None
+        for availability in availability_results:
+            if availability['number'] == location['number']:
+                bikes_available = availability['available_bikes']
+                bike_stands_available = availability['available_bike_stands']
+                break
+
+        locations.append((latitude, longitude, bikes_available, name, bike_stands_available,number))
+
+    return render_template('mapping.html', API_KEY='AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw', locations=locations)
 
 
 @app.route('/news.html')
@@ -77,6 +99,41 @@ def news():
 @app.route('/how-to.html')
 def howto():
     return render_template('how-to.html')
+
+@app.route('/availability/<int:station_id>')
+def predict_bikes(station_id):
+    # ['number', 'month', 'hour', 'minute', 'weather_main', 'main_temp', 'main_humidity', 'wind_speed', 'dayofweek']
+    from datetime import datetime
+    today = datetime.today()
+    dow,month = today.weekday(),today.month
+
+    predict_array = []
+    json_dict = {}
+    for h in range(24):
+        predict_array.append([station_id,month,h,0,99,99,99,99,dow])
+    results = bike_model.predict(predict_array).tolist()
+    for index,bikes in enumerate(results):
+        json_dict[index] = bikes
+
+    return json.dumps(json_dict)
+
+@app.route('/standsavailability/<int:stand_id>')
+def predict_stands(stand_id):
+    # ['number', 'month', 'hour', 'minute', 'weather_main', 'main_temp', 'main_humidity', 'wind_speed', 'dayofweek']
+    from datetime import datetime
+    today = datetime.today()
+    dow,month = today.weekday(),today.month
+
+    predict_array = []
+    json_dict = {}
+    for h in range(24):
+        predict_array.append([stand_id,month,h,0,99,99,99,99,dow])
+    results = stands_model.predict(predict_array).tolist()
+    for index,stands in enumerate(results):
+        json_dict[index] = stands
+
+    return json.dumps(json_dict)
+
 
 if __name__ == "__main__":
     app.run()
