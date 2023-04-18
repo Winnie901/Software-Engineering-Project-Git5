@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Input Form</title>
+    <script>
+        // Function to set location input field with user's current location
+        function setLocationInputField(latitude, longitude) {
+            document.getElementById('location').value = latitude + ',' + longitude;
+        }
+    </script>
+</head>
+<body>
+    <h1>Enter Time and Location</h1>
+    <form action="/predict" method="POST">
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time">
+        <br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location">
+        <!-- Add a button to get user location and populate the location input field -->
+        <button type="button" onclick="getUserLocation()">Get Location</button>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        // Function to get user location
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Function to display user location
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+            setLocationInputField(latitude, longitude); // Call the function to set location input field
+        }
+    </script>
+</body>
+</html>

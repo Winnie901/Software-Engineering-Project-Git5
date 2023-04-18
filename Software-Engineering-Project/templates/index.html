@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title> Dublin Bikes</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet1.css') }}">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>
+<script>
+     function createCenterControl(map) {
+  const controlButton = document.createElement('button');
+
+  // Set CSS for the control.
+  controlButton.style.backgroundColor = '#fff';
+  controlButton.style.border = '2px solid #fff';
+  controlButton.style.borderRadius = '3px';
+  controlButton.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlButton.style.color = 'rgb(25,25,25)';
+  controlButton.style.cursor = 'pointer';
+  controlButton.style.fontFamily = 'Roboto,Arial,sans-serif';
+  controlButton.style.fontSize = '16px';
+  controlButton.style.lineHeight = '38px';
+  controlButton.style.margin = '8px 0 22px';
+  controlButton.style.padding = '0 5px';
+  controlButton.style.textAlign = 'center';
+
+  controlButton.textContent = 'Maps and Stations';
+  controlButton.title = 'Click to recenter the map';
+  controlButton.type = 'button';
+
+  // Setup the click event listeners: simply set the map to Chicago.
+  controlButton.addEventListener('click', () => {
+{
+        location.href = "/mapping.html";
+    };
+  });
+
+  return controlButton;
+}
+      function initMap() {
+        var dublin = {lat: 53.3498, lng: -6.2603};
+        var map = new google.maps.Map(
+            document.getElementById('map'), {zoom: 12, center: dublin
+        });
+
+        var locations = {{ locations|tojson }};
+        for (var i = 0; i < locations.length; i++) {
+            var location = locations[i];
+            var infoWindow = new google.maps.InfoWindow();
+
+            var marker = new google.maps.Marker({
+                position: { lat: location[0], lng: location[1] },
+                map: map,
+            });
+
+            google.maps.event.addListener(marker, "click", (function(marker, location) {
+            return function() {
+            infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
+            infoWindow.open(map, marker);
+        }
+    })(marker, location));
+        }
+          // Create the DIV to hold the control.
+  const centerControlDiv = document.createElement("div");
+  // Create the control.
+  const centerControl = createCenterControl(map);
+
+  // Append the control to the DIV.
+  centerControlDiv.appendChild(centerControl);
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+      }
+
+    </script>
+
+</head>
+    <body onload="initMap()">
+    <header>
+
+
+<nav>
+
+<div class="topnav">
+    <a class="active" href="/"> Homepage</a>
+  <a href="mapping.html">Map</a>
+    <a href="how-to.html"> How To</a>
+    <a href="news.html"> News</a>
+
+</div>
+
+
+</nav>
+
+    </header>
+
+<main>
+
+
+    <section class="main">
+       <div><img src="{{ url_for('static',filename='images/DBlogo.png') }}" class="img1"></div>
+     <div><h1 class="h1"> Welcome to Dublin Bikes</h1>
+
+        <p class="p1"> Your hub for sustainable travel all around Dublin.</p></h1></div>
+        <p class="p1">Our bike rental service is open daily from 5:00 AM to 12:30 AM.</p>
+        </br>
+        <p class="p1"> Return system is available 24 hours a day, 7 days a week, 365 days a year.</p>
+    </section>
+
+
+
+
+<section>
+<h2 class="h2">Subscription Options</h2>
+<p style="text-align: center">Choose a membership level that works for you, whether you are a frequent rider or an occasional user.
+</p>
+<div class="row">
+  <div class="column" >
+    <h2>1 Day Pass</h2>
+    <p> If you're planning a short-term visit to the city and want to explore it on a bike, the DB Bikes service offers a 1 Day Ticket that gives you full access to all its features. This ticket is an excellent choice for tourists and visitors who want to discover the city's attractions in a fun and eco-friendly way.
+
+With the 1 Day Ticket, you can take advantage of free rides for the first 30 minutes of each trip. This feature enables you to travel between different locations in the city without worrying about the rental fees. After the initial 30 minutes, a rental charge will apply. However, the rates are affordable and offer excellent value for money.</p>
+  </div>
+  <div class="column" >
+    <h2>1 Week Pass </h2>
+    <p > The 1 Week Pass is the perfect choice for tourists and visitors who want to explore Dublin's sights and attractions in a fun, eco-friendly, and convenient way. With over 100 docking stations located throughout the city, you can pick up and drop off your bike at any time and any location that suits you.
+
+The first 30 minutes of each ride with the 1 Week Pass is absolutely free. This feature makes it an excellent value for money rental option, especially if you want to travel around the city multiple times a day. After the initial 30 minutes, rental fees will apply, but our rates are affordable, and you'll still get excellent value for money.
+    </p>
+  </div>
+
+
+      <div class="column" >
+    <h2>Annual Subscription</h2>
+    <p> If you're a regular cyclist or a daily commuter, our Annual Subscription plan is an excellent choice for you. For an annual fee of just €35, you can rent a bike 365 days a year and enjoy the benefits of our bike-sharing service.
+
+The Annual Subscription plan is ideal for individuals who use bikes as a primary mode of transportation or who enjoy cycling for leisure. With this subscription, you'll have access to our entire network of bikes and docking stations, making it easy and convenient to pick up and drop off a bike at any time.
+
+Like our other rental options, the first 30 minutes of each journey is free with the Annual Subscription plan. This feature allows you to travel around the city without worrying about the rental charges. After the initial 30 minutes, a rental fee will apply, but our rates are affordable, and you'll get excellent value for money.</p>
+  </div>
+
+      <div class="column" >
+    <h2>E-Bikes</h2>
+    <p>  With e-dublinbikes, you can enjoy an effortless and smooth ride with an electric motor that assists you as you pedal. This feature is particularly beneficial if you're cycling uphill or covering long distances, as it reduces the physical effort required, making it more accessible and enjoyable.
+
+Once you've signed up for the e-dublinbikes option, we'll organise the delivery of a personal battery to your address. The battery comes with a charger and is easy to install on your bike. You can use this battery with any of the available e-dublinbikes at our docking stations across the city.
+
+It's important to note that the e-dublinbikes option is independent of your annual subscription, meaning it's a separate subscription that you can add to your existing plan. The e-dublinbikes subscription will renew independently of your annual subscription until you return the battery.</p>
+  </div>
+</div>
+
+
+</section>
+
+
+    <section>
+<h2 class="h2">Mapping</h2>
+    <div id="map" style="height: 500px;"></div>
+
+    </section>
+
+
+
+        <section>
+<h2 class="h2">News</h2>
+
+
+
+            <div class="gallery">
+  <a target="_blank" href="https://irishcycle.com/2023/04/01/radical-shake-up-expected-as-minister-ryan-ties-walking-and-cycling-priority-to-all-transport-funding/">
+    <img src="{{ url_for('static',filename='images/cycling1.jpeg') }}" alt="Cinque Terre" width="600" height="700">
+  </a>
+                <div class="desc"> <b><u>Transport for Ireland</u></b>
+  <p>Transport Minister Eamon Ryan has announced a bold move to prioritize the design of infrastructure for walking and cycling. In order to achieve this goal, a high standard of active travel infrastructure will be made a requirement of all transport funding. The design manuals and guidance that the Minister has referred to have been in place for over a decade but largely ignored or selectively used to defend rubbish designs.
+
+“The National Transport Authority is tasked with handing out most of the walking cycling funding, it does not make sense to allow its own BusConnects team to have such scant regard for walking and cycling design - they said.</p>
+  </div>
+</div>
+
+<div class="gallery">
+  <a target="_blank" href="https://irishcycle.com/2023/03/31/600m-section-of-clontarf-route-cycle-path-opens-in-one-direction/">
+    <img src="{{ url_for('static',filename='images/cycling2.jpeg') }}" alt="Forest" width="600" height="400">
+  </a>
+ <div class="desc"> <b><u>Clontarf Cycle Route Path</u></b>
+  <p>Today marks the opening of a new segment of the Clontarf to City Centre cycle path, which spans approximately 600 meters. This new section connects the junction with the Malahide road to just before the River Tolka at the Annesley Bridge.
+
+Although this new segment is open to cyclists, they will still need to navigate through a shared space with buses, taxis, and other motorists as the project's work area is still ongoing. However, this marks the beginning of a phased opening of the entire route as sections are completed.</p>
+  </div>
+</div>
+
+<div class="gallery">
+  <a target="_blank" href="https://irishcycle.com/2023/03/30/talks-this-evening-on-learning-and-sharing-active-transport-knowledge-and-expertise/">
+    <img src="{{ url_for('static',filename='images/cycling3.jpeg') }}" alt="Northern Lights" width="600" height="400">
+  </a>
+ <div class="desc"> <b><u> Dublin Cycling Campaign</u></b>
+  <p> The upcoming event on Thursday the 30th of March will feature notable speakers in the field of sustainable mobility and cycling. Robin van der Griend, a Sustainable Mobility Consultant from Mobycon Academy, and David O'Connor, the Head of Environment and Planning at TU Dublin, will both be presenting. Additionally, I, Cian Ginty, will be sharing insights on Dutch Cycling Study Tours.
+
+The Q&A session will also include the expertise of Angela van der Kloof, a seasoned Dutch consultant from Mobycon, and Mairéad Forsythe, chair of the board of Cyclist.ie, who will be introducing the evening.
+
+</p>
+  </div></div>
+
+<div class="gallery">
+  <a target="_blank" href="https://irishcycle.com/2023/03/28/new-cycling-and-walking-link-opens-to-help-connect-areas-along-m50-at-sandyford/">
+    <img src="{{ url_for('static',filename='images/cycling4.jpeg') }}" alt="Mountains" width="600" height="400">
+  </a>
+ <div class="desc"> <b><u> Sandyford Businesss District </u></b>
+     <p>A brand new walking and cycling link has just been opened by Dún Laoghaire-Rathdown County Council and Transport Infrastructure Ireland (TII). This link spans a total length of 114 meters and will connect the Drummartin Link Road to Bracken Road, bypassing the often-congested Blackthorn Drive junction near the Beacon Hospital.
+
+The new access route, partially located within the TII Sandyford Maintenance Depot, will not only provide a more direct route for people traveling by foot or bicycle but also reduce their travel times significantly. It will connect two areas on opposite sides of the M50 - the bustling Sandyford Business District and the serene Sandyford Village - and make it much easier for commuters to navigate between the two locations.</p>
+
+
+ </div></div>
+
+    </section>
+</main>
+
+
+
+
+    </body>
+
+</html>

@@ -1,0 +1,185 @@
+
+
+    /* Navigation Bar [2,3] */
+.topnav {
+  overflow: hidden;
+  background-color: black;
+}
+
+.topnav a {
+  float: left;
+  color: antiquewhite;
+  text-align: center;
+  padding: 20px 147px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: deepskyblue;
+  color: darkblue;
+}
+
+.topnav a.active {
+  background-color: deepskyblue;
+  color: white;
+}
+
+
+/*section.header{*/
+/*    float:left;*/
+/*    text-align: left;*/
+/*    padding: 90px;*/
+/*    width: 200px;*/
+
+
+
+/*p{ color: white;*/
+
+/*}*/
+
+a {
+color:black;
+}
+
+h1.h1 {
+    text-align: left;
+font-style: "Times";
+font-family: "Bodoni 72 Oldstyle";
+font-size: 50px;
+    color: white;
+height: 15px;
+}
+
+
+h2.h2 {
+    text-align: center;
+font-style: "Times";
+font-family: "Bodoni 72 Oldstyle";
+font-size: 50px;
+    color: white;
+}
+
+
+section.main {
+  background-color: black;
+  width: 1400px;
+  border: 4px solid white;
+  padding: 50px;
+  margin: 20px;
+    height: 450px;
+}
+img.img1 {
+  display: block;
+float: right;
+    height: 330px;
+    width: 570px;
+
+
+}
+p.p1{
+    padding: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+font-size: 20px;
+text-align: left;
+/*word-spacing: 5px;*/
+    color: white;
+
+}
+div.fixed{position: fixed;
+top: 80px;
+bottom: 90px;
+float: right;
+color: blue;
+
+}
+
+h2{
+    color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 25%;
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* gallery
+ */
+
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 340px;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+    color: white;
+}
+
+
+/* News iMage */
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.bottom-left {
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
+}
+
+.top-left {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+}
+
+.top-right {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+
