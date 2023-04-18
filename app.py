@@ -7,8 +7,8 @@ import jsonify
 import sklearn
 from flask_sqlalchemy import model
 
-bike_model = pickle.load(open('bikes_model.pkl','rb'))
-stands_model = pickle.load(open('stands_model.pkl','rb'))
+bike_model = pickle.load(open('/Users/ife/Documents/GitHub/Software-Engineering-Project/bikes_model.pkl','rb'))
+stands_model = pickle.load(open('/Users/ife/Documents/GitHub/Software-Engineering-Project/stands_model.pkl','rb'))
 
 
 app = Flask(__name__)
@@ -149,4 +149,4 @@ def predict_stands(stand_id):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host ="0.0.0.0", port =5000, debug = True)
