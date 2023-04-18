@@ -1,0 +1,8 @@
+name: softwareEngineeringProject
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pandas
+  - jupyterlab
+prefix: /Users/iphone/opt/anaconda3/envs/softwareEngineeringProject
