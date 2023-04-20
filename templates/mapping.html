@@ -11,7 +11,7 @@
 <script>
         function myFunction(bikenumber) {
             console.log("I am here")
-            fetch("http://127.0.0.1:5000/availability/" + bikenumber) // replace with your desired URL
+            fetch("/availability/" + bikenumber) // replace with your desired URL
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -23,9 +23,10 @@
             })
 
         }
+
         function standsFunction(stand_number) {
             console.log("I am here")
-            fetch("http://127.0.0.1:5000/standsavailability/" + stand_number) // replace with your desired URL
+            fetch("/standsavailability/" + stand_number) // replace with your desired URL
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -285,6 +286,25 @@
         }
 
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+
+<script>
+  var today = new Date();
+  var day = today.getDate();
+  var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var month = monthNames[today.getMonth()];
+  var year = today.getFullYear();
+  var date = day + " " + month + " " + year + "<br>DUBLIN, IRELAND";
+  document.getElementById("date").innerHTML = date;
+
+  $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Dublin&units=metric&appid=3f8d6a1b1c08e87d9aa40e783517b136",
+    function(response_5) {
+      document.getElementById("coverage").innerHTML = response_5.weather[0].main;
+      document.getElementById("temp").innerHTML = response_5.main.temp + "°C";
+      document.getElementById("wind").innerHTML = response_5.wind.speed + "km/h";
+    });
+</script>
+
 
     <style>
 
@@ -347,6 +367,7 @@
 
     <div id="map"> </div>
                 <div id="box">
+                <p>Lets help you plan your route</p>
                     <div class="dropdown">
     <select id="start-dropdown">
       <option value="" disabled selected>Select Starting Bike Stand</option>
@@ -388,6 +409,23 @@
 </div></div>
 
 </div>
+
+<section class="main">
+  <div id="weather">
+    <h2 id="date"></h2>
+    <div id="conditions">
+      <div class="condition">
+        <span id="coverage"></span>
+      </div>
+      <div class="condition">
+        <span id="temp"></span>
+      </div>
+      <div class="condition">
+        <span id="wind"></span>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 </body>
