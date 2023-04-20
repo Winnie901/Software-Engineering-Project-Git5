@@ -4,6 +4,7 @@
 <title> Dublin Bikes</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet1.css') }}">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 <script>
      function createCenterControl(map) {
   const controlButton = document.createElement('button');
@@ -26,7 +27,6 @@
   controlButton.title = 'Click to recenter the map';
   controlButton.type = 'button';
 
-  // Setup the click event listeners: simply set the map to Chicago.
   controlButton.addEventListener('click', () => {
 {
         location.href = "/mapping.html";
@@ -58,18 +58,31 @@
         }
     })(marker, location));
         }
-          // Create the DIV to hold the control.
+
   const centerControlDiv = document.createElement("div");
-  // Create the control.
+
   const centerControl = createCenterControl(map);
 
-  // Append the control to the DIV.
+
   centerControlDiv.appendChild(centerControl);
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 
       }
+/*The code for this function was written using the source below
+https://github.com/giokeyboard/dublinbikes/blob/master/src/Flask_Blog/templates/js/myjs.js*/
+      $(document).ready(function() {
+
+        $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Dublin&units=metric&appid=3f8d6a1b1c08e87d9aa40e783517b136",
+          function(response_5) {
+            document.getElementById("coverage").innerHTML = response_5.weather[0].main;
+            document.getElementById("temp").innerHTML = response_5.main.temp + "°C";
+            document.getElementById("wind").innerHTML = response_5.wind.speed + "km/h";
+          });
+      });
 
     </script>
+
+
 
 </head>
     <body onload="initMap()">
@@ -95,13 +108,35 @@
 
 
     <section class="main">
-       <div><img src="{{ url_for('static',filename='images/DBlogo.png') }}" class="img1"></div>
+        <div><img src="{{ url_for('static',filename='images/DBlogo.png') }}" class="img1"></div>
+    <div id="weather" style="color: #f0f0f0">
+  <h2 id="date"></h2>
+        <!--The code to display the weather data in the home page was written using the source below
+https://github.com/giokeyboard/dublinbikes/blob/master/src/Flask_Blog/templates/js/myjs.js -->
+  <table>
+    <tr>
+      <th>Coverage</th>
+      <th>Temperature</th>
+      <th>Wind</th>
+    </tr>
+    <tr>
+      <td><span id="coverage"></span></td>
+      <td><span id="temp"></span></td>
+      <td><span id="wind"></span></td>
+    </tr>
+  </table>
+</div>
+
      <div><h1 class="h1"> Welcome to Dublin Bikes</h1>
 
-        <p class="p1"> Your hub for sustainable travel all around Dublin.</p></h1></div>
+        <h1><p class="p1"> Your hub for sustainable travel all around Dublin.</p></h1></div>
         <p class="p1">Our bike rental service is open daily from 5:00 AM to 12:30 AM.</p>
         </br>
         <p class="p1"> Return system is available 24 hours a day, 7 days a week, 365 days a year.</p>
+
+       <!-- <section class="weatherInfo"> -->
+
+      <!--  </section> -->
     </section>
 
 

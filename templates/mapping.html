@@ -2,23 +2,22 @@
 <html>
 <head>
     <title>Map with Markers</title>
-    <!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>-->
+
     <link href="{{ url_for('static',filename='styles/stylesheet1.css') }}" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization&callback=initMap" async defer></script>
-    <!---<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization"></script>-->
+
 <script>
         function myFunction(bikenumber) {
             console.log("I am here")
-            fetch("/availability/" + bikenumber) // replace with your desired URL
+            fetch("/availability/" + bikenumber)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json(); // assuming the response is in JSON format
+                    return response.json();
                 }).then(data => {
-                  // Handle the fetched data
+
                   drawBarChart2(data);
             })
 
@@ -26,14 +25,14 @@
 
         function standsFunction(stand_number) {
             console.log("I am here")
-            fetch("/standsavailability/" + stand_number) // replace with your desired URL
+            fetch("/standsavailability/" + stand_number)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json(); // assuming the response is in JSON format
+                    return response.json();
                 }).then(data => {
-                  // Handle the fetched data
+
                   drawBarChart(data);
             })
 
@@ -42,23 +41,23 @@
      var bike_chart = null;
 
              function drawBarChart(data, id) {
-            // Convert the JSON object to an array of [key, value] pairs
+
             var dataArray = Object.entries(data);
             console.log(dataArray)
 
-            // Extract the keys (hours) and values (values) arrays from the data array
+
             var hours = dataArray.map(function (pair) {
                 return pair[0];
             });
-            //console.log(hours)
+
             var values = dataArray.map(function (pair) {
                 return pair[1];
             });
 
 
-            // Create a new bar chart using Chart.js library
+
             if (stand_chart !== null) {
-                  // If yes, destroy the existing chart
+
                  stand_chart.destroy();
             }
             var ctx = document.getElementById('barChart').getContext('2d');
@@ -67,11 +66,11 @@
                 data: {
                     labels: hours,
                     datasets: [{
-                        label: 'Average Stands Available Per Hour',
+                        label: 'Predicted Bike Stands Available By Hour',
                         data: values,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Change the bar color as needed
-                        borderColor: 'rgba(75, 192, 192, 1)', // Change the bar border color as needed
-                        borderWidth: 1 // Change the bar border width as needed
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -79,17 +78,15 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 25 // Set the maximum y-axis value to the highest value in the data plus 1
+                            max: 25
                         }
                     }
                 }
             });
         }
         function drawBarChart2(data) {
-            // Convert the JSON object to an array of [key, value] pairs
             var dataArray = Object.entries(data);
-            //console.log(dataArray)
-            // Extract the keys (hours) and values (values) arrays from the data array
+
             var hours = dataArray.map(function (pair) {
                 return pair[0];
             });
@@ -98,9 +95,9 @@
             });
 
 
-            // Create a new bar chart using Chart.js library
+
             if (bike_chart !== null) {
-                  // If yes, destroy the existing chart
+
                  bike_chart.destroy();
             }
             var ctx = document.getElementById('barChart2').getContext('2d');
@@ -109,11 +106,11 @@
                 data: {
                     labels: hours,
                     datasets: [{
-                        label: 'Average Bike Available Per Hour',
+                        label: 'Predicted Bikes Available By Hour',
                         data: values,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Change the bar color as needed
-                        borderColor: 'rgba(75, 192, 192, 1)', // Change the bar border color as needed
-                        borderWidth: 1 // Change the bar border width as needed
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -121,7 +118,7 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 25 // Set the maximum y-axis value to the highest value in the data plus 1
+                            max: 25
                         }
                     }
                 }
@@ -162,7 +159,7 @@
                 var heatmap = new google.maps.visualization.HeatmapLayer({
                     data: heatmapData,
                     map: map,
-                    zIndex: 1, // set the z-index to 1
+                    zIndex: 1,
                 });
 
                 console.log(heatmap);
@@ -199,7 +196,7 @@
                 }
             }
 
-            // Call the drawHeatmap function
+
             window.addEventListener("load", function () {
                 drawHeatmap();
             });
@@ -231,23 +228,21 @@
                 console.log(startMarker);
                 console.log(endMarker);
                 if (startMarker && endMarker) {
-                    // Create a DirectionsService object to use the route method and get a result for our request
+                    // DirectionsService object to use the route method and get a result for our request
                     const directionsService = new google.maps.DirectionsService();
 
-                    // Create a DirectionsRenderer object to display the route
+                    // DirectionsRenderer object to display the route
                     const directionsDisplay = new google.maps.DirectionsRenderer();
 
-                    // Bind the DirectionsRenderer to the map
+                    // Binding DirectionsRenderer to the map
                     directionsDisplay.setMap(map);
 
-                    // Set the destination, origin, and travel mode
                     const request = {
                         destination: { lat: endMarker[0], lng: endMarker[1] },
                         origin: { lat: startMarker[0], lng: startMarker[1] },
                         travelMode: "DRIVING",
                     };
 
-                    // Pass the request to the route method
                     console.log("About to attempt draw")
                     directionsService.route(request, function (result, status) {
                     if (status == "OK") {
@@ -286,29 +281,11 @@
         }
 
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-
-<script>
-  var today = new Date();
-  var day = today.getDate();
-  var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  var month = monthNames[today.getMonth()];
-  var year = today.getFullYear();
-  var date = day + " " + month + " " + year + "<br>DUBLIN, IRELAND";
-  document.getElementById("date").innerHTML = date;
-
-  $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Dublin&units=metric&appid=3f8d6a1b1c08e87d9aa40e783517b136",
-    function(response_5) {
-      document.getElementById("coverage").innerHTML = response_5.weather[0].main;
-      document.getElementById("temp").innerHTML = response_5.main.temp + "°C";
-      document.getElementById("wind").innerHTML = response_5.wind.speed + "km/h";
-    });
-</script>
 
 
     <style>
 
-         /*Define container for map*/
+         /*container for map*/
         .map-container {
             display: flex;
             align-items: center;
@@ -329,16 +306,16 @@
             background-color: black;
         }
 
-        /* Define div for map */
+        /* div for map */
         #map {
             flex: 3;
             height: 1000px;
         }
 
-        /* Define div for box */
+        /* div for box */
         #box {
             flex: 1;
-            /*background-color: lightgrey;*/
+
             height: 100%;
             width: 100%;}
 
@@ -387,7 +364,7 @@
 </div>
 
 
-<!-- Just for testing purposes, seeing is I cn get the lat and long coordinates of a selected marker-->
+
 <div>
     <span id="starting-latitude"></span>
     <span id="starting-longitude"></span>
@@ -403,6 +380,7 @@
                 <canvas id="barChart"></canvas>
     <canvas id="barChart2"></canvas>
 
+
     </div>
 
 
@@ -410,22 +388,6 @@
 
 </div>
 
-<section class="main">
-  <div id="weather">
-    <h2 id="date"></h2>
-    <div id="conditions">
-      <div class="condition">
-        <span id="coverage"></span>
-      </div>
-      <div class="condition">
-        <span id="temp"></span>
-      </div>
-      <div class="condition">
-        <span id="wind"></span>
-      </div>
-    </div>
-  </div>
-</section>
 
 
 </body>
