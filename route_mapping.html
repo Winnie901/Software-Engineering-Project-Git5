@@ -2,37 +2,146 @@
 <html>
 <head>
     <title>Map with Markers</title>
-
+    <!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>-->
     <link href="{{ url_for('static',filename='styles/stylesheet1.css') }}" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization&callback=initMap" async defer></script>
+    <!---<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization"></script>-->
 
+    <style>
+
+         /*Define container for map*/
+        .map-container {
+            display: flex;
+            align-items: center;
+            align-self: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+               .box-container {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .box-heading {
+            font-size: 24px;
+            margin-bottom: 10px;
+            background-color: black;
+        }
+
+        /* Define div for map */
+        #map {
+            flex: 3;
+            height: 1000px;
+        }
+
+        /* Define div for box */
+        #box {
+            flex: 1;
+            /*background-color: lightgrey;*/
+            height: 100%;
+            width: 100%;}
+
+    </style>
+</head>
+<header>
+
+    <nav>
+
+        <div class="topnav">
+            <a href="/">Homepage</a>
+            <a class="active" href="mapping.html">Map</a>
+            <a href="how-to.html"> How To</a>
+            <a href="news.html"> News</a>
+
+        </div>
+
+
+    </nav>
+
+</header>
+<body onload="initMap();">
+<div class="box-container">
+    <div class="box-heading" style="color: white">Mapping</div>
+<div class="map-container">
+
+    <div id="map"> </div> <!-- Map goes here -->
+                <div id="box">
+                    <div>
+                    <p>TESTING TSTING 1233</p>
+                    </div>
+                <canvas id="barChart"></canvas>
+    <canvas id="barChart2"></canvas>
+    </div>
+
+
+</div></div>
+
+</div>
+
+<div class="dropdown">
+    <select id="start-dropdown">
+      <option value="" disabled selected>Select Starting Bike Stand</option>
+      {% for location in locations %}
+        <option value="{{ location[3] }}">{{ location[3] }}</option>
+      {% endfor %}
+    </select>
+</div>
+
+<div class="dropdown">
+    <select id="dest-dropdown">
+      <option value="" disabled selected>Select Destination Bike Stand</option>
+      {% for location in locations %}
+        <option value="{{ location[3] }}">{{ location[3] }}</option>
+      {% endfor %}
+    </select>
+</div>
+
+
+<!-- Just for testing purposes, seeing is I cn get the lat and long coordinates of a selected marker-->
+<div>
+    <span id="starting-latitude"></span>
+    <span id="starting-longitude"></span>
+</div>
+
+<div>
+    <span id="ending-latitude"></span>
+    <span id="ending-longitude"></span>
+</div>
+
+<button id="route-button" onclick="calculateRoute()">Get Route</button>
+
+
+
+</body>
 <script>
         function myFunction(bikenumber) {
             console.log("I am here")
-            fetch("/availability/" + bikenumber)
+            fetch("http://127.0.0.1:5000/availability/" + bikenumber) // replace with your desired URL
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json();
+                    return response.json(); // assuming the response is in JSON format
                 }).then(data => {
-
+                  // Handle the fetched data
                   drawBarChart2(data);
             })
 
         }
-
         function standsFunction(stand_number) {
             console.log("I am here")
-            fetch("/standsavailability/" + stand_number)
+            fetch("http://127.0.0.1:5000/standsavailability/" + stand_number) // replace with your desired URL
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json();
+                    return response.json(); // assuming the response is in JSON format
                 }).then(data => {
-
+                  // Handle the fetched data
                   drawBarChart(data);
             })
 
@@ -41,23 +150,23 @@
      var bike_chart = null;
 
              function drawBarChart(data, id) {
-
+            // Convert the JSON object to an array of [key, value] pairs
             var dataArray = Object.entries(data);
             console.log(dataArray)
 
-
+            // Extract the keys (hours) and values (values) arrays from the data array
             var hours = dataArray.map(function (pair) {
                 return pair[0];
             });
-
+            //console.log(hours)
             var values = dataArray.map(function (pair) {
                 return pair[1];
             });
 
 
-
+            // Create a new bar chart using Chart.js library
             if (stand_chart !== null) {
-
+                  // If yes, destroy the existing chart
                  stand_chart.destroy();
             }
             var ctx = document.getElementById('barChart').getContext('2d');
@@ -66,11 +175,11 @@
                 data: {
                     labels: hours,
                     datasets: [{
-                        label: 'Predicted Bike Stands Available By Hour',
+                        label: 'Stands',
                         data: values,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Change the bar color as needed
+                        borderColor: 'rgba(75, 192, 192, 1)', // Change the bar border color as needed
+                        borderWidth: 1 // Change the bar border width as needed
                     }]
                 },
                 options: {
@@ -78,15 +187,17 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 25
+                            max: 25 // Set the maximum y-axis value to the highest value in the data plus 1
                         }
                     }
                 }
             });
         }
         function drawBarChart2(data) {
+            // Convert the JSON object to an array of [key, value] pairs
             var dataArray = Object.entries(data);
-
+            //console.log(dataArray)
+            // Extract the keys (hours) and values (values) arrays from the data array
             var hours = dataArray.map(function (pair) {
                 return pair[0];
             });
@@ -95,9 +206,9 @@
             });
 
 
-
+            // Create a new bar chart using Chart.js library
             if (bike_chart !== null) {
-
+                  // If yes, destroy the existing chart
                  bike_chart.destroy();
             }
             var ctx = document.getElementById('barChart2').getContext('2d');
@@ -106,11 +217,11 @@
                 data: {
                     labels: hours,
                     datasets: [{
-                        label: 'Predicted Bikes Available By Hour',
+                        label: 'Bikes',
                         data: values,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Change the bar color as needed
+                        borderColor: 'rgba(75, 192, 192, 1)', // Change the bar border color as needed
+                        borderWidth: 1 // Change the bar border width as needed
                     }]
                 },
                 options: {
@@ -118,7 +229,7 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 25
+                            max: 25 // Set the maximum y-axis value to the highest value in the data plus 1
                         }
                     }
                 }
@@ -159,7 +270,7 @@
                 var heatmap = new google.maps.visualization.HeatmapLayer({
                     data: heatmapData,
                     map: map,
-                    zIndex: 1,
+                    zIndex: 1, // set the z-index to 1
                 });
 
                 console.log(heatmap);
@@ -196,11 +307,11 @@
                 }
             }
 
-
+            // Call the drawHeatmap function
             window.addEventListener("load", function () {
                 drawHeatmap();
             });
-
+            
 
             var dublin = {lat: 53.3498, lng: -6.2603};
             var map = new google.maps.Map(document.getElementById("map"), {
@@ -208,10 +319,10 @@
                 center: dublin,
             });
             map.setZoom(14);
-
+            
         }
 
-
+            
 
             var start_dropdown;
             var dest_dropdown;
@@ -221,28 +332,30 @@
             function calculateRoute() {
                 var start_dropdown = document.getElementById("start-dropdown");
                 var dest_dropdown = document.getElementById("dest-dropdown");
-
+                
 
                 const startMarker = locations.find((location) => location[3] === start_dropdown.options[start_dropdown.selectedIndex].value);
                 const endMarker = locations.find((location) => location[3] === dest_dropdown.options[dest_dropdown.selectedIndex].value);
                 console.log(startMarker);
                 console.log(endMarker);
                 if (startMarker && endMarker) {
-                    // DirectionsService object to use the route method and get a result for our request
+                    // Create a DirectionsService object to use the route method and get a result for our request
                     const directionsService = new google.maps.DirectionsService();
 
-                    // DirectionsRenderer object to display the route
+                    // Create a DirectionsRenderer object to display the route
                     const directionsDisplay = new google.maps.DirectionsRenderer();
 
-                    // Binding DirectionsRenderer to the map
+                    // Bind the DirectionsRenderer to the map
                     directionsDisplay.setMap(map);
-
+                    
+                    // Set the destination, origin, and travel mode
                     const request = {
                         destination: { lat: endMarker[0], lng: endMarker[1] },
                         origin: { lat: startMarker[0], lng: startMarker[1] },
                         travelMode: "DRIVING",
                     };
 
+                    // Pass the request to the route method
                     console.log("About to attempt draw")
                     directionsService.route(request, function (result, status) {
                     if (status == "OK") {
@@ -281,114 +394,4 @@
         }
 
     </script>
-
-
-    <style>
-
-         /*container for map*/
-        .map-container {
-            display: flex;
-            align-items: center;
-            align-self: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-        }
-               .box-container {
-            width: 100%;
-            {#padding: 20px;#}
-            text-align: center;
-            background-color: #f0f0f0;
-        }
-        .box-heading {
-            font-size: 24px;
-            margin-bottom: 10px;
-            background-color: black;
-        }
-
-        /* div for map */
-        #map {
-            flex: 3;
-            height: 1000px;
-        }
-
-        /* div for box */
-        #box {
-            flex: 1;
-
-            height: 100%;
-            width: 100%;}
-
-    </style>
-</head>
-<header>
-
-    <nav>
-
-        <div class="topnav">
-            <a href="/">Homepage</a>
-            <a class="active" href="mapping.html">Map</a>
-            <a href="how-to.html"> How To</a>
-            <a href="news.html"> News</a>
-
-        </div>
-
-
-    </nav>
-
-</header>
-<body onload="initMap();">
-<div class="box-container">
-    <div class="box-heading" style="color: white">Mapping</div>
-<div class="map-container">
-
-    <div id="map"> </div>
-                <div id="box">
-                <p>Lets help you plan your route</p>
-                    <div class="dropdown">
-    <select id="start-dropdown">
-      <option value="" disabled selected>Select Starting Bike Stand</option>
-      {% for location in locations %}
-        <option value="{{ location[3] }}">{{ location[3] }}</option>
-      {% endfor %}
-    </select>
-</div>
-
-<div class="dropdown">
-    <select id="dest-dropdown">
-      <option value="" disabled selected>Select Destination Bike Stand</option>
-      {% for location in locations %}
-        <option value="{{ location[3] }}">{{ location[3] }}</option>
-      {% endfor %}
-    </select>
-</div>
-
-
-
-<div>
-    <span id="starting-latitude"></span>
-    <span id="starting-longitude"></span>
-</div>
-
-<div>
-    <span id="ending-latitude"></span>
-    <span id="ending-longitude"></span>
-</div>
-
-<button id="route-button" onclick="calculateRoute()">Get Route</button>
-                <p>Click Your Desired Marker to View Average Bikes</p>
-                <canvas id="barChart"></canvas>
-    <canvas id="barChart2"></canvas>
-
-
-    </div>
-
-
-</div></div>
-
-</div>
-
-
-
-</body>
 </html>

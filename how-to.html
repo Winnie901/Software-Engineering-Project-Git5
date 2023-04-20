@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dublin Bikes Application</title>
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/stylesheet1.css') }}">
+<style>
+    .container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+  height: 300px;
+}
+
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+</head>
+  <header>
+
+<nav>
+
+<div class="topnav">
+      <a href="/">Homepage</a>
+    <a href="mapping.html">Map</a>
+    <a class="active" href="how-to.html"> How To</a>
+        <a href="news.html"> News</a>
+
+</div>
+
+
+</nav>
+
+    </header>
+<body class="body">
+<div class="container">
+  <img src="static/images/DBlogo.png" alt="Logo" style="width:100%;">
+</div>
+  <h1 style="text-align: center">Welcome to Dublin Bikes!</h1>
+    <p>Here's how you can rent and return a bike to the nearest location using our application.</p>
+
+
+
+<div class="row">
+  <div class="column" style="background-color:#aaa;">
+    <h2>Renting a Bike </h2>
+    <p><ol>
+    <li>Open the Dublin Bikes application on your device.</li>
+    <li>Sign in or create an account if you haven't already.</li>
+    <li>Allow the application to access your location.</li>
+    <li>On the map, find the nearest Dublin Bikes station that has available bikes.</li>
+    <li>Tap on the station to see the details and the number of available bikes.</li>
+    <li>Tap the "Rent" button to select a bike.</li>
+    <li>Enter the bike number displayed on the bike into the application.</li>
+    <li>The bike will unlock automatically, and you can start your ride.</li>
+  </ol></p>
+  </div>
+
+  <div class="column" style="background-color:#bbb;">
+    <h2>Returning a Bike</h2>
+    <p>    <ol>
+    <li>Find the nearest Dublin Bikes station on the map.</li>
+    <li>Tap on the station to see the details and the number of available bike docks.</li>
+    <li>Tap the "Return" button to end your ride.</li>
+    <li>Lock the bike manually by sliding the lock on the back wheel.</li>
+    <li>Enter the bike number into the application to confirm the return.</li>
+    <li>Make sure the bike is securely locked in the dock.</li>
+    <li>You're all set! You have successfully returned the bike.</li>
+  </ol></p>
+  </div>
+
+  <div class="column" style="background-color:#ccc;">
+    <h2>Tips for a Smooth Experience </h2>
+    <p>  <ul>
+    <li>Check the bike availability and dock availability before starting your trip to ensure a smooth renting and returning process.</li>
+    <li>Be sure to lock the bike securely in the dock when returning it to avoid any additional charges.</li>
+    <li>If you encounter any issues or have questions, contact the Dublin Bikes customer support for assistance.</li>
+  </ul></p>
+  </div>
+</div>
+
+  <p style="text-align: center">Thank you for using the Dublin Bikes application! Happy biking!</p>
+</body>
+</html>
