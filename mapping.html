@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map with Markers</title>
+    <!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>-->
+    <link href="{{ url_for('static',filename='styles/stylesheet1.css') }}" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw"></script>-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization&callback=initMap" async defer></script>
+    <!---<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization"></script>-->
+<script>
+        function myFunction(bikenumber) {
+            console.log("I am here")
+            fetch("/availability/" + bikenumber)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).then(data => {
+
+                  drawBarChart2(data);
+            })
+
+        }
+
+        function standsFunction(stand_number) {
+            console.log("I am here")
+            fetch("/standsavailability/" + stand_number)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).then(data => {
+
+                  drawBarChart(data);
+            })
+
+        }
+    var stand_chart = null;
+     var bike_chart = null;
+
+             function drawBarChart(data, id) {
+
+            var dataArray = Object.entries(data);
+            console.log(dataArray)
+
+
+            var hours = dataArray.map(function (pair) {
+                return pair[0];
+            });
+
+            var values = dataArray.map(function (pair) {
+                return pair[1];
+            });
+
+
+
+            if (stand_chart !== null) {
+
+                 stand_chart.destroy();
+            }
+            var ctx = document.getElementById('barChart').getContext('2d');
+            stand_chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: hours,
+                    datasets: [{
+                        label: 'Predicted Bike Stands Available By Hour',
+                        data: values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 25
+                        }
+                    }
+                }
+            });
+        }
+        function drawBarChart2(data) {
+            var dataArray = Object.entries(data);
+
+            var hours = dataArray.map(function (pair) {
+                return pair[0];
+            });
+            var values = dataArray.map(function (pair) {
+                return pair[1];
+            });
+
+
+
+            if (bike_chart !== null) {
+
+                 bike_chart.destroy();
+            }
+            var ctx = document.getElementById('barChart2').getContext('2d');
+            bike_chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: hours,
+                    datasets: [{
+                        label: 'Predicted Bikes Available By Hour',
+                        data: values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 25
+                        }
+                    }
+                }
+            });
+        }
+
+        var locations = {{ locations | tojson }};
+
+        var map;
+        var directionsService;
+        var directionsRenderer;
+
+        function initMap() {
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+
+            function drawHeatmap() {
+
+                console.log(locations);
+
+                var dublin = {lat: 53.3498, lng: -6.2603};
+                map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 13.5,
+                    center: dublin,
+                });
+                directionsRenderer.setMap(map);
+
+                var heatmapData = [];
+                locations.forEach(function (location) {
+                    heatmapData.push({
+                        location: new google.maps.LatLng(location[0], location[1]),
+                        weight: location[2],
+                    });
+                    console.log(location);
+                    console.log(typeof location);
+                });
+
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatmapData,
+                    map: map,
+                    zIndex: 1,
+                });
+
+                console.log(heatmap);
+                heatmap.setMap(map);
+                heatmap.set("radius", 70);
+
+                for (var i = 0; i < locations.length; i++) {
+                    var location = locations[i];
+
+                    var infoWindow = new google.maps.InfoWindow();
+                    var marker = new google.maps.Marker({
+                        position: {lat: location[0], lng: location[1]},
+                        map: map,
+                    });
+
+                    google.maps.event.addListener(
+                        marker,
+                        "click",
+                        (function (marker, location) {
+                            return function () {
+                                myFunction(location[5]);
+                                standsFunction(location[5]);
+                                infoWindow.setContent(
+                                    location[3] +
+                                    "<br>Available bikes: " +
+                                    location[2] +
+                                    "<br>Available bike stands: " +
+                                    location[4]
+                                );
+                                infoWindow.open(map, marker);
+                            };
+                        })(marker, location)
+                    );
+                }
+            }
+
+
+            window.addEventListener("load", function () {
+                drawHeatmap();
+            });
+
+
+            var dublin = {lat: 53.3498, lng: -6.2603};
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: dublin,
+            });
+            map.setZoom(14);
+
+        }
+
+
+
+            var start_dropdown;
+            var dest_dropdown;
+
+            const routeButton = document.getElementById("route-button");
+
+            function calculateRoute() {
+                var start_dropdown = document.getElementById("start-dropdown");
+                var dest_dropdown = document.getElementById("dest-dropdown");
+
+
+                const startMarker = locations.find((location) => location[3] === start_dropdown.options[start_dropdown.selectedIndex].value);
+                const endMarker = locations.find((location) => location[3] === dest_dropdown.options[dest_dropdown.selectedIndex].value);
+                console.log(startMarker);
+                console.log(endMarker);
+                if (startMarker && endMarker) {
+                    // DirectionsService object to use the route method and get a result for our request
+                    const directionsService = new google.maps.DirectionsService();
+
+                    // DirectionsRenderer object to display the route
+                    const directionsDisplay = new google.maps.DirectionsRenderer();
+
+                    // Binding DirectionsRenderer to the map
+                    directionsDisplay.setMap(map);
+
+                    const request = {
+                        destination: { lat: endMarker[0], lng: endMarker[1] },
+                        origin: { lat: startMarker[0], lng: startMarker[1] },
+                        travelMode: "DRIVING",
+                    };
+
+                    console.log("About to attempt draw")
+                    directionsService.route(request, function (result, status) {
+                    if (status == "OK") {
+                        console.log("Status OK: Drawing")
+                        // Display the route on the map
+                        directionsRenderer.setDirections(result);
+                    }
+                    });
+                }
+            }
+
+
+        function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+            setLocationInputField(latitude, longitude);
+        }
+
+        function setLocationInputField(lat, lng) {
+            var locationInputField = document.getElementById("location");
+            locationInputField.value = lat + ", " + lng;
+        }
+
+        function setDestinationInputField(lat, lng) {
+            var destinationInputField = document.getElementById("destination");
+            destinationInputField.value = lat + ", " + lng;
+        }
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+
+<script>
+  var today = new Date();
+  var day = today.getDate();
+  var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var month = monthNames[today.getMonth()];
+  var year = today.getFullYear();
+  var date = day + " " + month + " " + year + "<br>DUBLIN, IRELAND";
+  document.getElementById("date").innerHTML = date;
+
+  $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Dublin&units=metric&appid=3f8d6a1b1c08e87d9aa40e783517b136",
+    function(response_5) {
+      document.getElementById("coverage").innerHTML = response_5.weather[0].main;
+      document.getElementById("temp").innerHTML = response_5.main.temp + "°C";
+      document.getElementById("wind").innerHTML = response_5.wind.speed + "km/h";
+    });
+</script>
+
+
+    <style>
+
+         /*container for map*/
+        .map-container {
+            display: flex;
+            align-items: center;
+            align-self: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+               .box-container {
+            width: 100%;
+            {#padding: 20px;#}
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .box-heading {
+            font-size: 24px;
+            margin-bottom: 10px;
+            background-color: black;
+        }
+
+        /* div for map */
+        #map {
+            flex: 3;
+            height: 1000px;
+        }
+
+        /* div for box */
+        #box {
+            flex: 1;
+
+            height: 100%;
+            width: 100%;}
+
+    </style>
+</head>
+<header>
+
+    <nav>
+
+        <div class="topnav">
+            <a href="/">Homepage</a>
+            <a class="active" href="mapping.html">Map</a>
+            <a href="how-to.html"> How To</a>
+            <a href="news.html"> News</a>
+
+        </div>
+
+
+    </nav>
+
+</header>
+<body onload="initMap();">
+<div class="box-container">
+    <div class="box-heading" style="color: white">Mapping</div>
+<div class="map-container">
+
+    <div id="map"> </div>
+                <div id="box">
+                <p>Lets help you plan your route</p>
+                    <div class="dropdown">
+    <select id="start-dropdown">
+      <option value="" disabled selected>Select Starting Bike Stand</option>
+      {% for location in locations %}
+        <option value="{{ location[3] }}">{{ location[3] }}</option>
+      {% endfor %}
+    </select>
+</div>
+
+<div class="dropdown">
+    <select id="dest-dropdown">
+      <option value="" disabled selected>Select Destination Bike Stand</option>
+      {% for location in locations %}
+        <option value="{{ location[3] }}">{{ location[3] }}</option>
+      {% endfor %}
+    </select>
+</div>
+
+
+
+<div>
+    <span id="starting-latitude"></span>
+    <span id="starting-longitude"></span>
+</div>
+
+<div>
+    <span id="ending-latitude"></span>
+    <span id="ending-longitude"></span>
+</div>
+
+<button id="route-button" onclick="calculateRoute()">Get Route</button>
+                <p>Click Your Desired Marker to View Average Bikes</p>
+                <canvas id="barChart"></canvas>
+    <canvas id="barChart2"></canvas>
+
+    </div>
+
+
+</div></div>
+
+</div>
+
+<section class="main">
+  <div id="weather">
+    <h2 id="date"></h2>
+    <div id="conditions">
+      <div class="condition">
+        <span id="coverage"></span>
+      </div>
+      <div class="condition">
+        <span id="temp"></span>
+      </div>
+      <div class="condition">
+        <span id="wind"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</body>
+</html>

@@ -3,11 +3,11 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import pymysql.cursors
 import json
 import pickle
-import jsonify
+from flask import jsonify
 import sklearn
 from flask_sqlalchemy import model
 
-bike_model = pickle.load(open('bikes_model.pkl','rb'))
+bike_model = pickle.load(open('bikes_model.pkl', 'rb'))
 stands_model = pickle.load(open('stands_model.pkl','rb'))
 
 
@@ -36,17 +36,15 @@ def index():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM availability ORDER BY last_update DESC LIMIT 117')
 
-    # I'm going to try and get the correct availability results
 
-    # Fetch the results and close the connection
     availability_results = cursor.fetchall()
 
-    # Getting the locations
+
     cursor.execute('SELECT * FROM stations')
     location_results = cursor.fetchall()
     print(availability_results)
     print(location_results)
-    # Now we will be extracting all the lat and long values
+
     locations = []
     for location in location_results:
         latitude = location['position_lat']
@@ -69,13 +67,10 @@ def index():
 
 @app.route('/mapping.html')
 def map():
-    # Execute a SELECT query that will join available bikes and location
+
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM availability ORDER BY last_update DESC LIMIT 117')
 
-    # I'm going to try and get the correct availability results
-
-    # Fetch the results and close the connection
     availability_results = cursor.fetchall()
 
     # Getting the locations
@@ -83,7 +78,7 @@ def map():
     location_results = cursor.fetchall()
     print(availability_results)
     print(location_results)
-    # Now we will be extracting all the lat and long values
+    # extracting all the lat and long values
     locations = []
     for location in location_results:
         latitude = location['position_lat']
@@ -115,7 +110,6 @@ def howto():
 
 @app.route('/availability/<int:station_id>')
 def predict_bikes(station_id):
-    # ['number', 'month', 'hour', 'minute', 'weather_main', 'main_temp', 'main_humidity', 'wind_speed', 'dayofweek']
     from datetime import datetime
     today = datetime.today()
     dow,month = today.weekday(),today.month
@@ -132,7 +126,6 @@ def predict_bikes(station_id):
 
 @app.route('/standsavailability/<int:stand_id>')
 def predict_stands(stand_id):
-    # ['number', 'month', 'hour', 'minute', 'weather_main', 'main_temp', 'main_humidity', 'wind_speed', 'dayofweek']
     from datetime import datetime
     today = datetime.today()
     dow,month = today.weekday(),today.month
