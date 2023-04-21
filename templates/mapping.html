@@ -3,12 +3,14 @@
 <head>
     <title>Map with Markers</title>
 
+    // Importing Necessary Javascript files
     <link href="{{ url_for('static',filename='styles/stylesheet1.css') }}" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization&callback=initMap" async defer></script>
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 
 <script>
+        
         function myFunction(bikenumber) {
             console.log("I am here")
             fetch("/availability/" + bikenumber)
@@ -125,7 +127,8 @@
                 }
             });
         }
-
+        
+        // Gather the locations information for all the bike stations
         var locations = {{ locations | tojson }};
 
         var map;
@@ -133,20 +136,24 @@
         var directionsRenderer;
 
         function initMap() {
+            // We will need the following in order for the mapping tool
             directionsService = new google.maps.DirectionsService();
             directionsRenderer = new google.maps.DirectionsRenderer();
-
+            
+            // Heatmap information
             function drawHeatmap() {
 
                 console.log(locations);
-
+                
+                // Map information for centering it around Dublin
                 var dublin = {lat: 53.3498, lng: -6.2603};
                 map = new google.maps.Map(document.getElementById("map"), {
                     zoom: 13.5,
                     center: dublin,
                 });
                 directionsRenderer.setMap(map);
-
+                
+                // Plotting heatmap information for each bike station
                 var heatmapData = [];
                 locations.forEach(function (location) {
                     heatmapData.push({
@@ -156,7 +163,8 @@
                     console.log(location);
                     console.log(typeof location);
                 });
-
+                
+                // Plotting heatmap points
                 var heatmap = new google.maps.visualization.HeatmapLayer({
                     data: heatmapData,
                     map: map,
@@ -166,7 +174,8 @@
                 console.log(heatmap);
                 heatmap.setMap(map);
                 heatmap.set("radius", 70);
-
+                
+                // For loop to display Info Window information when the marker is clicked on
                 for (var i = 0; i < locations.length; i++) {
                     var location = locations[i];
 
@@ -218,8 +227,11 @@
             var dest_dropdown;
 
             const routeButton = document.getElementById("route-button");
-
+            
+            // Function that displaying the route from one selected marker to another
             function calculateRoute() {
+                
+                // Get the value that the user selects from the dropdown menus
                 var start_dropdown = document.getElementById("start-dropdown");
                 var dest_dropdown = document.getElementById("dest-dropdown");
 
