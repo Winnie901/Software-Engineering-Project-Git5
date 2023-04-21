@@ -6,6 +6,7 @@
     <link href="{{ url_for('static',filename='styles/stylesheet1.css') }}" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmEmTVXz4FLSsTM3JME9J3VW-WXECqmKw&libraries=visualization&callback=initMap" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 
 <script>
         function myFunction(bikenumber) {
@@ -280,6 +281,18 @@
             destinationInputField.value = lat + ", " + lng;
         }
 
+        /*The code for this function was written using the source below
+https://github.com/giokeyboard/dublinbikes/blob/master/src/Flask_Blog/templates/js/myjs.js*/
+      $(document).ready(function() {
+
+        $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Dublin&units=metric&appid=3f8d6a1b1c08e87d9aa40e783517b136",
+          function(response_5) {
+            document.getElementById("coverage").innerHTML = response_5.weather[0].main;
+            document.getElementById("temp").innerHTML = response_5.main.temp + "°C";
+            document.getElementById("wind").innerHTML = response_5.wind.speed + "km/h";
+          });
+      });
+
     </script>
 
 
@@ -300,12 +313,6 @@
             text-align: center;
             background-color: #f0f0f0;
         }
-        .box-heading {
-            font-size: 24px;
-            margin-bottom: 10px;
-            background-color: black;
-        }
-
         /* div for map */
         #map {
             flex: 3;
@@ -315,9 +322,14 @@
         /* div for box */
         #box {
             flex: 1;
+            float: right;
 
             height: 100%;
             width: 100%;}
+
+        .img1 {
+        width: 50%;
+        height: 80px;}
 
     </style>
 </head>
@@ -339,8 +351,30 @@
 </header>
 <body onload="initMap();">
 <div class="box-container">
-    <div class="box-heading" style="color: white">Mapping</div>
+
+    <div id="weather" style="color: black; position: absolute; top: 80px; right: 55px;">
+  <h2 id="date"></h2>
+        <!--The code to display the weather data in the home page was written using the source below
+https://github.com/giokeyboard/dublinbikes/blob/master/src/Flask_Blog/templates/js/myjs.js -->
+  <table>
+       <div><img src="{{ url_for('static',filename='images/weather.png') }}" class="img1"></div>
+    <tr>
+      <th>Coverage</th>
+      <th>Temperature</th>
+      <th>Wind</th>
+    </tr>
+    <tr>
+
+      <td><span id="coverage"></span></td>
+      <td><span id="temp"></span></td>
+      <td><span id="wind"></span></td>
+    </tr>
+  </table>
+</div>
+
+
 <div class="map-container">
+
 
     <div id="map"> </div>
                 <div id="box">

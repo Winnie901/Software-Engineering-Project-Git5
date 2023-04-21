@@ -113,9 +113,10 @@ https://github.com/giokeyboard/dublinbikes/blob/master/src/Flask_Blog/templates/
   <h2 id="date"></h2>
         <!--The code to display the weather data in the home page was written using the source below
 https://github.com/giokeyboard/dublinbikes/blob/master/src/Flask_Blog/templates/js/myjs.js -->
-  <table>
+                     <div><img src="{{ url_for('static',filename='images/weather.png') }}" style="width: 50px; height: auto; float: left"></div>
+<table>
     <tr>
-      <th>Coverage</th>
+<th>Coverage</th>
       <th>Temperature</th>
       <th>Wind</th>
     </tr>
