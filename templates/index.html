@@ -36,11 +36,14 @@
   return controlButton;
 }
       function initMap() {
+        // Creating a map value that will center around Dublin
         var dublin = {lat: 53.3498, lng: -6.2603};
         var map = new google.maps.Map(
             document.getElementById('map'), {zoom: 12, center: dublin
         });
-
+           
+        
+        // Creating a Marker and Information window for every bike station in locations
         var locations = {{ locations|tojson }};
         for (var i = 0; i < locations.length; i++) {
             var location = locations[i];
@@ -50,7 +53,8 @@
                 position: { lat: location[0], lng: location[1] },
                 map: map,
             });
-
+            
+            // Waiting for the marker to be clicked to display the information window
             google.maps.event.addListener(marker, "click", (function(marker, location) {
             return function() {
             infoWindow.setContent(location[3] + "<br>Available bikes: " + location[2]);
